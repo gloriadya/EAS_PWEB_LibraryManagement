@@ -133,8 +133,8 @@
         }
     }
 
-    else if (isset($_POST['tambah_peminjaman'])) {
-        $id = $_POST['id_peminjaman'];
+    else if (isset($_POST['edit_peminjaman'])) {
+        $id = $_POST['id'];
         $kategori = $_POST['kategori'];
         $nama_buku = $_POST['nama_buku'];
         $nama_peminjam = $_POST['nama_peminjam'];
