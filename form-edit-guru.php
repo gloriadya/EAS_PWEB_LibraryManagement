@@ -224,7 +224,7 @@
                 </li>
                 
                 <li class="<?php if(basename($_SERVER['SCRIPT_NAME']) == 'list-orangtua.php'){echo 'active'; }else { echo ''; } ?>">
-                    <a href="list-orangtua.php">Data Orang Tua Murid</a>
+                    <a href="list-peminjaman.php">Data Peminjaman</a>
                 </li>
 
                 <li class="<?php if(basename($_SERVER['SCRIPT_NAME']) == 'list-pembayaran.php'){echo 'active'; }else { echo ''; } ?>">

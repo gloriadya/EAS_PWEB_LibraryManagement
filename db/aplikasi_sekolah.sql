@@ -96,6 +96,19 @@ INSERT INTO `siswa` (`id_siswa`, `fotodiri`, `nama`, `kelas`, `jenis_kelamin`, `
 (8, '241220211542501058939.png', 'Shin Tae Yong', 'XII', 'Laki-laki', '123189', 'Korea', '0892389183', 'Kristen Protestan'),
 (9, '24122021154332Fate Grand Order - Zettai Majuu Sensen Babylonia Episode 3.mkv_snapshot_13.49.245.jpg', 'Piki', 'XI', 'Perempuan', '1111111', 'Pacul', '0819319319831', 'Islam');
 
+
+CREATE TABLE `peminjaman` (
+  `id_peminjaman` int(11) NOT NULL,
+  `kategori` varchar(255) NOT NULL,
+  `nama_buku` varchar(255) NOT NULL,
+  `nama_peminjam` varchar(100) NOT NULL,
+  `tanggal_pinjam` DATE NOT NULL,
+  `tanggal_kembali` DATE,
+  `nama_admin` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `peminjaman` (`id_peminjaman`, `kategori`, `nama_buku`, `nama_peminjam`,`tanggal_pinjam`,`tanggal_kembali`,`nama_admin`) VALUES
+(1, 'Fiksi', 'Laskar Pelangi', 'Tegar', '2022-12-12',null,'Tegar');
 --
 -- Indexes for dumped tables
 --
@@ -118,6 +131,9 @@ ALTER TABLE `guru`
 ALTER TABLE `siswa`
   ADD PRIMARY KEY (`id_siswa`);
 
+ALTER TABLE `peminjaman`
+  ADD PRIMARY KEY (`id_peminjaman`);
+
 --
 -- AUTO_INCREMENT for dumped tables
 --
@@ -139,6 +155,10 @@ ALTER TABLE `guru`
 --
 ALTER TABLE `siswa`
   MODIFY `id_siswa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+COMMIT;
+
+ALTER TABLE `peminjaman`
+  MODIFY `id_peminjaman` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

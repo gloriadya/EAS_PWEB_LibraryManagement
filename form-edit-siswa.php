@@ -224,7 +224,7 @@
                 </li>
                 
                 <li class="<?php if(basename($_SERVER['SCRIPT_NAME']) == 'list-orangtua.php'){echo 'active'; }else { echo ''; } ?>">
-                    <a href="list-orangtua.php">Data Orang Tua Murid</a>
+                    <a href="list-peminjaman.php">Data Peminjaman</a>
                 </li>
 
                 <li class="<?php if(basename($_SERVER['SCRIPT_NAME']) == 'list-pembayaran.php'){echo 'active'; }else { echo ''; } ?>">
@@ -233,7 +233,7 @@
             </ul>
 
             <ul class="list-unstyled CTAs">
-                <h6>© 2021 SMA Suzuran</h6>
+                <h6>© 2022 Perpustakaan</h6>
             </ul>
         </nav>
 

@@ -80,8 +80,17 @@
                     window.location.href='./list-guru.php';
                 </script> <?php
         }
+    } 
+    else if (isset($_POST['tambah_peminjaman'])) {
+        $kategori = $_POST['kategori'];
+        $nama_buku = $_POST['nama_buku'];
+        $nama_peminjam = $_POST['nama_peminjam'];
+        $tanggal_pinjam = $_POST['tanggal_pinjam'];
+        $tanggal_kembali = $_POST['tanggal_kembali'];
+        $nama_admin = $_POST['nama_admin'];
+        $sql = "INSERT INTO peminjaman (kategori, nama_buku, nama_peminjam, tanggal_pinjam, tanggal_kembali, nama_admin) VALUE ('$kategori', '$nama_buku', '$nama_peminjam', '$tanggal_pinjam', '$tanggal_kembali', '$nama_admin')";
+        $query = mysqli_query($db, $sql);
     }
-
     else {
         die("Akses dilarang!");
     }

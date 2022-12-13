@@ -8,6 +8,20 @@
     if ($_SESSION["status_login"] != "true") {
         header("Location: index.php?pesan=belum_login");
     }
+
+    if (!isset($_GET['id_peminjaman'])) {
+        header('Location: list-peminjaman.php');
+    }
+
+    $id = $_GET['id_peminjaman'];
+
+    $sql = "SELECT * FROM peminjaman WHERE id_peminjaman=$id";
+    $query = mysqli_query($db, $sql);
+    $peminjaman = mysqli_fetch_assoc($query);
+
+    if (mysqli_num_rows($query) < 1) {
+        die("Data tidak ditemukan.");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +30,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Data Peminjaman</title>
+    <title>Dashboard Admin - Edit Data peminjaman</title>
     <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/000000/source-code.png">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -24,7 +38,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="https://use.fontawesome.com/3378f9e169.js"></script>
-    <style>    
+    <style>
+        .submit {
+            width: 80px;
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background: #FAFAFA;
@@ -64,8 +84,8 @@
         .line {
             width: 100%;
             height: 1px;
-            border-bottom: 1px dashed #DDD;
-            margin: 40px 0;
+            border-bottom: 1px solid #DDD;
+            margin: 20px 0;
         }
 
         /* ---------------------------------------------------
@@ -177,9 +197,13 @@
             min-height: 100vh;
             transition: all 0.3s;
         }
+
+        textarea {
+            resize: none;
+        }
     </style>
 </head>
-<body class="nav-md">
+<body>
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -204,7 +228,7 @@
                 </li>
 
                 <li class="<?php if(basename($_SERVER['SCRIPT_NAME']) == 'list-pembayaran.php'){echo 'active'; }else { echo ''; } ?>">
-                    <a href="list-pembayaran.php">Pembayaran SPP</a>
+                    <a href="#">Pembayaran SPP</a>
                 </li>
             </ul>
 
@@ -227,143 +251,46 @@
             </nav>
 
             <div style="margin: 0 30px">
-            <button class="btn btn-success" style="float: right" data-toggle="modal" data-target="#myModal">Tambah Data</button>
-                <h2 style="color: #0092FF">Peminjaman</h2>
-                <p>Perpustakaan</p>
+                <form action="proses_edit.php" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="hidden" name="id" value="<?php echo $peminjaman['id_peminjaman'] ?>">
 
-                <div class="line"></div>
-
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Kategori</th>
-                            <th scope="col">Nama Buku</th>
-                            <th scope="col">Nama Peminjam</th>
-                            <th scope="col">Tanggal Pinjam</th>
-                            <th scope="col">Tanggal Kembali</th>
-                            <th scope="col">Admin</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <?php 
-                            $batas = 5;
-        				    $halaman = isset($_GET['halaman'])?(int)$_GET['halaman'] : 1;
-		        		    $halaman_awal = ($halaman>1) ? ($halaman * $batas) - $batas : 0;
-                            
-                            $previous = $halaman - 1;
-				            $next = $halaman + 1;
-
-                            $sql = "SELECT * FROM peminjaman";
-                            $query = mysqli_query($db, $sql);
-                            $jumlah_data = mysqli_num_rows($query);
-                            $total_halaman = ceil($jumlah_data / $batas);
-
-                            $sql2 = "SELECT * FROM peminjaman LIMIT $halaman_awal, $batas";
-                            $query2 = mysqli_query($db, $sql2);
-
-                            $nomor = $halaman_awal + 1;
-
-                            while ($pinjam = mysqli_fetch_array($query2)) {
-                                echo "<tr>";
-
-                                echo "<td>".$nomor++."</td>";
-                                echo "<td>".$pinjam['kategori']."</td>";
-                                echo "<td>".$pinjam['nama_buku']."</td>";
-                                echo "<td>".$pinjam['nama_peminjam']."</td>";
-                                echo "<td>".$pinjam['tanggal_pinjam']."</td>";
-                                echo "<td>".$pinjam['tanggal_kembali']."</td>";
-                                echo "<td>".$pinjam['nama_admin']."</td>";
-
-                                echo "<td>";
-                                echo "<button class='btn btn-warning' style='margin-bottom: 5px' onclick=window.location.href='form-edit-peminjaman.php?id_peminjaman=".$pinjam['id_peminjaman']."'>Edit</button>";
-                                echo "<br />";
-                                echo "<button class='btn btn-danger' onclick=window.location.href='hapus.php?id_peminjaman=".$pinjam['id_peminjaman']."'>Hapus</button>";
-                                echo "</td>";
-
-                                echo "</tr>";
-                            }
-                        ?>
-                    </tbody>
-                </table>
-
-                <h5 style="margin-top: 20px">Total: <?php echo mysqli_num_rows($query) ?></h5>
-
-                <nav>
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" <?php if($halaman > 1){ echo "href='?halaman=$Previous'"; } ?> tabindex="-1">Previous</a>
-                        </li>
-                        
-                        <?php 
-                            for ($i = 1; $i <= $total_halaman; $i++){
-                                ?> 
-                                <li <?php if ($_GET['halaman'] == $i) echo "class='page-item active'"?> ><a class="page-link" href="?halaman=<?php echo $i ?>"><?php echo $i; ?></a></li>
-                                <?php
-                            }
-                        ?>
-                        
-                        <li class="page-item">
-                            <a class="page-link" <?php if($halaman < $total_halaman) { echo "href='?halaman=$next'"; } ?>>Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title font-weight-bold">Form Input Data peminjaman</h4>
-                            
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                <div class="modal-body">
-                    <form action="proses_tambah.php" method="POST" enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
+                            <div class="form-group">
                                     <label class="font-weight-bold">Kategori</label>
-                                    <input class="form-control" type="text" name="kategori" placeholder="Masukkan kategori" required>
+                                    <input class="form-control" type="text" name="kategori" value="<?php echo $peminjaman['kategori'] ?>" placeholder="Masukkan kategori" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Nama Buku</label>
-                                    <input class="form-control" type="text" name="nama_buku" placeholder="Masukkan nama buku" required>
+                                    <input class="form-control" type="text" name="nama_buku" value="<?php echo $peminjaman['nama_buku'] ?>" placeholder="Masukkan nama buku" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="font-weight-bold">Nama Peminjam</label>
-                                    <input class="form-control" type="text" name="nama_peminjam" placeholder="Masukkan nama peminjam" required>
+                                    <input class="form-control" type="text" name="nama_peminjam" value="<?php echo $peminjaman['nama_peminjam'] ?>" placeholder="Masukkan nama peminjam" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="font-weight-bold">Tanggal Pinjam</label>
-                                    <input class="form-control" type="date" name="tanggal_pinjam" placeholder="Isi Tanggal" required>
+                                    <input class="form-control" type="date" name="tanggal_pinjam" value="<?php echo $peminjaman['tanggal_pinjam'] ?>" placeholder="Isi Tanggal" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Tanggal Kembali</label>
-                                    <input class="form-control" type="date" name="tanggal_kembali">
+                                    <input class="form-control" type="date" name="tanggal_kembali" value="<?php echo $peminjaman['tanggal_kembali'] ?>">
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Nama Admin</label>
-                                    <input class="form-control" type="text" name="nama_admin" placeholder="Masukkan nama admin" required>
+                                    <input class="form-control" type="text" name="nama_admin" value="<?php echo $peminjaman['nama_admin'] ?>" placeholder="Masukkan nama admin" required>
                                 </div>
 
-                                <div class="line"></div>
+                            <div class="line"></div>
 
-                                <button style="float: right;" class="btn btn-success submit" type="submit" name="tambah_peminjaman" value="tambah_peminjaman">Tambah</button>
-                            </div>
+                            <button style="float: right;" class="btn btn-success submit" type="submit" name="edit_peminjaman" value="edit_peminjaman">Edit</button>
                         </div>
-                    </form>
-                </div>
-            </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
     </div>
 </body>
 </html>
