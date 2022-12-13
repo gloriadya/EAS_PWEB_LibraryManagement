@@ -143,6 +143,16 @@
         $nama_admin = $_POST['nama_admin'];
         $sql = "UPDATE peminjaman SET kategori='$kategori', nama_buku='$nama_buku', nama_peminjam='$nama_peminjam', tanggal_pinjam='$tanggal_pinjam', tanggal_kembali='$tanggal_kembali', nama_admin='$nama_admin' WHERE id_peminjaman=$id";
         $query = mysqli_query($db, $sql);
+        if ($query) {
+            ?> <script> 
+                alert("Data telah disimpan.");
+                window.location.href='./list-peminjaman.php';
+                </script> <?php
+        }
+
+        else {
+            die("Gagal menyimpan.");
+        }
     }
 
     else {

@@ -46,6 +46,20 @@
             die("Gagal menghapus.");
         }
     }
+    else if (isset($_GET['id_peminjaman'])) {
+        $id_peminjaman = $_GET['id_peminjaman'];
+
+        $sql = "DELETE FROM peminjaman WHERE id_peminjaman=$id_peminjaman";
+        $query = mysqli_query($db, $sql);
+        
+        if ($query) {
+            header('Location: list-peminjaman.php');
+        }
+
+        else {
+            die("Gagal menghapus.");
+        }
+    }
 
     else {
         die("Akses dilarang!");

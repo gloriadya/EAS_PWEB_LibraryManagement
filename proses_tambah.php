@@ -90,6 +90,19 @@
         $nama_admin = $_POST['nama_admin'];
         $sql = "INSERT INTO peminjaman (kategori, nama_buku, nama_peminjam, tanggal_pinjam, tanggal_kembali, nama_admin) VALUE ('$kategori', '$nama_buku', '$nama_peminjam', '$tanggal_pinjam', '$tanggal_kembali', '$nama_admin')";
         $query = mysqli_query($db, $sql);
+        if ($query) {
+            ?> <script> 
+                alert("Data telah disimpan.");
+                window.location.href='./list-peminjaman.php?status=sukses';
+                </script> <?php
+        }
+
+        else {
+            ?> <script>
+                alert("Data gagal disimpan.");
+                window.location.href='./list-peminjaman.php?status=gagal';
+                </script> <?php
+        }
     }
     else {
         die("Akses dilarang!");
